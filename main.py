@@ -1,5 +1,5 @@
 import logging
-from vkbottle import API, Bot, Keyboard, EMPTY_KEYBOARD, Text, KeyboardButtonColor
+from vkbottle import API, Bot, EMPTY_KEYBOARD, Text 
 from vkbottle import Callback, BaseStateGroup, User
 from vkbottle.bot import Message, Bot
 from config import API, GROUP_TOKEN, labeler
@@ -41,13 +41,6 @@ class VKinderCandidate():
                                         self.search_parameter['city'],
                                         self.search_parameter['user_id']
                                         )
-        await message.answer(f'По твоему запросу найдено {len(user)} анкет:')
+        await message.answer(f'По твоему запросу найдено {len(users)} анкет:')
 
-    for profile in user : 
-
-
-@bot.on.message()
-async def any_message(message: Message):
-    await message.answer("Привет я бот")
-
-bot.run_forever()
+    

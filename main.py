@@ -1,27 +1,53 @@
-from random import randrange
+import logging
+from vkbottle import API, Bot, Keyboard, EMPTY_KEYBOARD, Text, KeyboardButtonColor
+from vkbottle import Callback, BaseStateGroup, User
+from vkbottle.bot import Message, Bot
+from config import API, GROUP_TOKEN, labeler
+from collections import UserString
 
-import vk_api
-from vk_api.longpoll import VkLongPoll, VkEventType
+api = API(GROUP_TOKEN)
+bot = Bot(api=api)
 
-token = input('Token: ')
+logging.basicConfig(level=logging.INFO)
 
-vk = vk_api.VkApi(token=token)
-longpoll = VkLongPoll(vk)
+class MenuState(BaseStateGroup):
+    GENDER = 1
+    STATUS = 2
+    ID = 3
+    CITY = 4
+    AGE = 5
+    END = 6
+    
+class VKinderCandidate():
+    search_parameter = {
+        'gender' : None,
+        'status' : None,
+        'age_from' : None,
+        'age_to' : None,
+        'city' : None,
+        'user_id' : None
+    }
+
+    def __init__(self, api, bot):
+        self.api = api
+        self.bot = bot
+
+    async def launch_search(self, message):
+        await message.answer('Я начинаю поиск.....:'),
+        user = await self.api.user_search(self.search_parameter['gender'],
+                                        self.search_parameter['status'],
+                                        self.search_parameter['age_from'],
+                                        self.search_parameter['age_to'],
+                                        self.search_parameter['city'],
+                                        self.search_parameter['user_id']
+                                        )
+        await message.answer(f'По твоему запросу найдено {len(user)} анкет:')
+
+    for profile in user : 
 
 
-def write_msg(user_id, message):
-    vk.method('messages.send', {'user_id': user_id, 'message': message,  'random_id': randrange(10 ** 7),})
+@bot.on.message()
+async def any_message(message: Message):
+    await message.answer("Привет я бот")
 
-
-for event in longpoll.listen():
-    if event.type == VkEventType.MESSAGE_NEW:
-
-        if event.to_me:
-            request = event.text
-
-            if request == "привет":
-                write_msg(event.user_id, f"Хай, {event.user_id}")
-            elif request == "пока":
-                write_msg(event.user_id, "Пока((")
-            else:
-                write_msg(event.user_id, "Не поняла вашего ответа...")
+bot.run_forever()

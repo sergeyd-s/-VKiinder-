@@ -43,4 +43,5 @@ class VKinderCandidate():
                                         )
         await message.answer(f'По твоему запросу найдено {len(users)} анкет:')
 
-    
+    async def auto_parameter(self, message, id=None):
+        await 

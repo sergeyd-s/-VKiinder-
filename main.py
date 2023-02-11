@@ -1,6 +1,8 @@
+from ast import Parameter
+from inspect import _ParameterKind
 import logging
 from vkbottle import API, Bot, EMPTY_KEYBOARD, Text 
-from vkbottle import Callback, BaseStateGroup, User
+from vkbottle import Callback, BaseStateGroup, User, GroupEventType, GroupTypes
 from vkbottle.bot import Message, Bot
 from config import API, GROUP_TOKEN, labeler
 from collections import UserString
@@ -31,10 +33,10 @@ class VKinderCandidate():
     def __init__(self, api, bot):
         self.api = api
         self.bot = bot
-
+        
     async def launch_search(self, message):
         await message.answer('Я начинаю поиск.....:'),
-        user = await self.api.user_search(self.search_parameter['gender'],
+        users = await self.api.user_search(self.search_parameter['gender'],
                                         self.search_parameter['status'],
                                         self.search_parameter['age_from'],
                                         self.search_parameter['age_to'],
@@ -43,5 +45,23 @@ class VKinderCandidate():
                                         )
         await message.answer(f'По твоему запросу найдено {len(users)} анкет:')
 
-    async def auto_parameter(self, message, id=None):
-        await 
+    async def auto_parameters(self, message, id=None):
+        if id:
+            params = await self.api.user_get(id)
+        else:
+            params = await self.api.user_get(message, id)  
+
+        self.search_parameter = params[0]
+        await message.answer(f'Идет поиск по {params[1]["first_name"]}'
+                            f'{params[1]["last_name"]}''{params[1]["url"]')
+        if None in self.search_parameter.values():
+            await message.answer(('Информация не полная для поиска,\
+                                    поробуем добавить еще '))
+        await self.gender_opt(message)
+
+    async def welcome(self, message):
+        await message.answer(("Привет, я бот способный подбирать собеседников по интересам"
+                            "Например: для тебя, для друга/подруги по вашим параметрам"
+                            "Начнем "))
+                            keydoard=keydoard_option['start_keyboard'].get_json()
+    

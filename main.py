@@ -1,31 +1,37 @@
-from ast import Parameter
-from inspect import _ParameterKind
 import logging
-from vkbottle import API, Bot, EMPTY_KEYBOARD, Text 
+from vkbottle import API, Bot, EMPTY_KEYBOARD, Keyboard 
 from vkbottle import Callback, BaseStateGroup, User, GroupEventType, GroupTypes
 from vkbottle.bot import Message, Bot
 from config import API, GROUP_TOKEN, labeler
-from collections import UserString
+from keyboard import keyboard_init
 
 api = API(GROUP_TOKEN)
 bot = Bot(api=api)
 
 logging.basicConfig(level=logging.INFO)
 
-class MenuState(BaseStateGroup):
+class SuperState(BaseStateGroup):
     GENDER = 1
     STATUS = 2
     ID = 3
     CITY = 4
     AGE = 5
     END = 6
-    
+    TYPE = 7
+
+keyboard_option = {'start_keyboard': Keyboard(one_time=True, inline=False),
+                'status_opt_man': Keyboard(one_time=True, inline=False),
+                'status_opt_woman': Keyboard(one_time=True, inline=False),
+                'status_search': Keyboard(one_time=True, inline=False),
+                'status_end': Keyboard(one_time=True, inline=False)
+}
+
 class VKinderCandidate():
     search_parameter = {
         'gender' : None,
         'status' : None,
-        'age_from' : None,
-        'age_to' : None,
+        'age_min' : None,
+        'age_max' : None,
         'city' : None,
         'user_id' : None
     }
@@ -62,6 +68,37 @@ class VKinderCandidate():
     async def welcome(self, message):
         await message.answer(("Привет, я бот способный подбирать собеседников по интересам"
                             "Например: для тебя, для друга/подруги по вашим параметрам"
-                            "Начнем "))
-                            keydoard=keydoard_option['start_keyboard'].get_json()
+                            "Начнем ")),
+        random_id = 0,
+        keyboard = keyboard_option['start_keyboard'].get_json()
+        await self.bot.state_dispenser.set(message.peer_id, SuperState.TYPE)
+
+    async def gender_opt(self, message):
+        if self.search_parameter.get('gender', None) is None:
+            await message.answer("Введите нужный пол поиска", # доб/недоб random_id = 0
+                                keyboard = keyboard_option['gender_opt'].get_json())
+            await self.bot.state_dispenser.set(message.peer_id, SuperState.GENDER)
+        else:
+            await self.age_opt(message)
+
+    async def age_opt(self, message):
+        if self.search_parameter.get('age_from', None) is None:
+            await message.answer("Ввведи возраст поиска в дипазоне от и до")
+                                # доб/недоб random_id = 0
+                                # keyboard = keyboard_option['age_min'].get_json()) # обратить внимание на выбор возраста
+            await self.bot.state_dispenser.set(message.peer_id, SuperState.AGE)
+        else:
+            await self.city_opt(self, message)
+
+    async def city_opt(self, message):
+        if self.search_parameter.get('city', None) is None:
+            await message.answer("Введите город поиска")
+                                # доб/недоб random_id = 0
+            await self.bot.state_dispenser.set(message.peer_id, SuperState.CITY)
+        else:
+            await self.status_opt(self, message)
+
+    async def
+
+
     

@@ -19,12 +19,12 @@ class SuperState(BaseStateGroup):
     END = 6
     TYPE = 7
 
-keyboard_option = {'start_keyboard': Keyboard(one_time=True, inline=False),
-                'status_opt_man': Keyboard(one_time=True, inline=False),
-                'status_opt_woman': Keyboard(one_time=True, inline=False),
-                'status_search': Keyboard(one_time=True, inline=False),
-                'status_end': Keyboard(one_time=True, inline=False)
-}
+# # keyboard_option = {'start_keyboard': Keyboard(one_time=True, inline=False),
+# #                 'status_opt_man': Keyboard(one_time=True, inline=False),
+# #                 'status_opt_woman': Keyboard(one_time=True, inline=False),
+# #                 'status_search': Keyboard(one_time=True, inline=False),
+# #                 'status_end': Keyboard(one_time=True, inline=False)
+# }
 
 class VKinderCandidate():
     search_parameter = {
@@ -70,6 +70,7 @@ class VKinderCandidate():
                             "Например: для тебя, для друга/подруги по вашим параметрам"
                             "Начнем ")),
         random_id = 0,
+        keyboard_option =  Keyboard(one_time=True, inline=False)
         keyboard = keyboard_option['start_keyboard'].get_json()
         await self.bot.state_dispenser.set(message.peer_id, SuperState.TYPE)
 
@@ -98,7 +99,21 @@ class VKinderCandidate():
         else:
             await self.status_opt(self, message)
 
-    async def
+    async def status_opt(self, message):
+        if self.search_parameter.get('status', None) is None:
+            await message.answer('Выберете нужные анкеты')
+                                # доб/недоб random_id = 0
+                                # подумать как реализовать
+            await self.bot.state_dispenser.set(message.peer_id, SuperState.STATUS)
+        else:
+            await self.repeat_search(self, message)
 
-
+    async def repeat_search(self, message):
+        await message.answer(('Ок, давай поменяем параметры поиска'),
+                             keyboard = keyboard_option['start_keyboard'].get_json())
+        
+    async def search_id(self, message):
+        await message.answer("Введите id")
+        await self.bot.state_dispenser.set(message.peer_id, SuperState.ID)
     
+if __name__== '__main__'

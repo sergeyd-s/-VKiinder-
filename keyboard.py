@@ -8,7 +8,7 @@ def keyboard_init(keyboard_option):
                     payload={"command", 'me'}, color=KeyboardButtonColor.PRIMARY))
     keyboard_option ['start_keyboard'].row()                
     keyboard_option ['start_keyboard'].add(Text('Найди для друга/подруги',
-                    payload={"command", 'me'}, color=KeyboardButtonColor.POSITIVE))
+                    payload={"command", 'start'}, color=KeyboardButtonColor.POSITIVE))
 
     keyboard_option['gender_opt'].add(Text('женщина', 
                     payload={"command", 'man'}))

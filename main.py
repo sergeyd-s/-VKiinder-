@@ -1,6 +1,5 @@
 import logging
-from vkbottle import API, Bot, EMPTY_KEYBOARD, Keyboard 
-from vkbottle import Callback, BaseStateGroup, User, GroupEventType, GroupTypes
+from vkbottle import API, Bot, EMPTY_KEYBOARD, Keyboard, BaseStateGroup
 from vkbottle.bot import Message, Bot
 from config import API, GROUP_TOKEN, labeler
 from keyboard import keyboard_init
@@ -19,12 +18,12 @@ class SuperState(BaseStateGroup):
     END = 6
     TYPE = 7
 
-# # keyboard_option = {'start_keyboard': Keyboard(one_time=True, inline=False),
-# #                 'status_opt_man': Keyboard(one_time=True, inline=False),
-# #                 'status_opt_woman': Keyboard(one_time=True, inline=False),
-# #                 'status_search': Keyboard(one_time=True, inline=False),
-# #                 'status_end': Keyboard(one_time=True, inline=False)
-# }
+keyboard_option = {'start_keyboard': Keyboard(one_time=True, inline=False),
+                    'status_opt_man': Keyboard(one_time=True, inline=False),
+                    'status_opt_woman': Keyboard(one_time=True, inline=False),
+                    'status_search': Keyboard(one_time=True, inline=False),
+                    'status_end': Keyboard(one_time=True, inline=False)
+    }    
 
 class VKinderCandidate():
     search_parameter = {
@@ -70,7 +69,14 @@ class VKinderCandidate():
                             "Например: для тебя, для друга/подруги по вашим параметрам"
                             "Начнем ")),
         random_id = 0,
-        keyboard_option =  Keyboard(one_time=True, inline=False)
+        keyboard = keyboard_option['start_keyboard'].get_json()
+        await self.bot.state_dispenser.set(message.peer_id, SuperState.TYPE)
+
+    async def welcome_group(self, message):
+        await message.answer(("Привет, я бот способный подбирать собеседников по интересам"
+                            "Например: для тебя, для друга/подруги по вашим параметрам"
+                            "Начнем ")),
+        random_id = 0,
         keyboard = keyboard_option['start_keyboard'].get_json()
         await self.bot.state_dispenser.set(message.peer_id, SuperState.TYPE)
 
@@ -110,10 +116,13 @@ class VKinderCandidate():
 
     async def repeat_search(self, message):
         await message.answer(('Ок, давай поменяем параметры поиска'),
-                             keyboard = keyboard_option['start_keyboard'].get_json())
+                            keyboard = keyboard_option['start_keyboard'].get_json())
         
     async def search_id(self, message):
         await message.answer("Введите id")
         await self.bot.state_dispenser.set(message.peer_id, SuperState.ID)
     
-if __name__== '__main__'
+    
+if __name__== "__main__":
+    token = ''
+    group_token = ''

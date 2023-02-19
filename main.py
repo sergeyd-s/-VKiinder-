@@ -50,6 +50,17 @@ class VKinderCandidate():
                                         )
         await message.answer(f'По твоему запросу найдено {len(users)} анкет:')
 
+        for profile in users:
+            await message.answer(f"{profile['name']} - {profile['link']}")
+            for p_id in profile['photo_id']:
+                await message.answer(attachment=f"photo{profile['id']}_{p_id}")
+
+        self.search_parameter.clear()
+        await message.answer('Это все кого я нашёл, чем займёмся теперь?',
+                             keyboard=keyboard_option['end_keyboard']
+                             )
+        await self.bot.state_dispenser.set(message.peer_id, SuperState.END)
+
     async def auto_parameters(self, message, id=None):
         if id:
             params = await self.api.user_get(id)
@@ -107,16 +118,19 @@ class VKinderCandidate():
 
     async def status_opt(self, message):
         if self.search_parameter.get('status', None) is None:
-            await message.answer('Выберете нужные анкеты')
-                                # доб/недоб random_id = 0
-                                # подумать как реализовать
+            await message.answer(('Выберете нужные анкеты'),
+            keyboard = keyboard_option[f"status_opt-{self.search_parameter.get('gender', 'femail')}"].get_json())
             await self.bot.state_dispenser.set(message.peer_id, SuperState.STATUS)
         else:
             await self.repeat_search(self, message)
 
-    async def repeat_search(self, message):
+    async def repeat(self, message):
         await message.answer(('Ок, давай поменяем параметры поиска'),
                             keyboard = keyboard_option['start_keyboard'].get_json())
+        
+    async def good_bye(self, message):
+        await message.answer(('Пока, если вновь понадоблюсь, я здесь'),
+        keyboard = keyboard_option ['start_keyboard'].get_json())
         
     async def search_id(self, message):
         await message.answer("Введите id")

@@ -2,8 +2,8 @@ import os
 from vkbottle import API, BuiltinStateDispenser
 from vkbottle.bot import BotLabeler
 
-token = ''
-GROUP_token = ''
-api = API("GROUP_token")
+token = 'vk1.a.1eBY5A-Ax7tjlhu3FiGKYE7uI2p2BPS9rhQgdImYMKjMsB4L0VV5gJI-khiDyawJHC6Vm3L6pysXu5iyjQ9mabPeSAQ1ncFYuDAvutAc33Hk7xM6UfbSa20kyjAkH9scaXmJQsmU5tyP32Y5oTzhLI4LPjBdlZYo_lWtFv8L-XP85QJkNXOY6hQK0iG609s7'
+group_token = 'vk1.a.cXIls7TD2epq3AZ8CHiGKQB5DCwORcBmd8OIA2kSegu2RX4CNvFntkguxBnr3CdCA7Xym2pKKEblv8t8vi8ATxTQzoXvf4905YnnWnC9-Rzjm1PESBeZrquNo8ON00TobiQ7OI6iiO7SbayIePDJ6JclMirFyFif2xU1x8q6vq__j2MrzRYVjcJkrZYq3_Fg0Zc5XaR_vJm_s0vsoevdpg'
+api = API("group_token")
 labeler = BotLabeler()
 state_dispenser = BuiltinStateDispenser()

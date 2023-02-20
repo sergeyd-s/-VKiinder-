@@ -1,14 +1,13 @@
 from vkbottle.bot import Bot, Message
-from vkbottle import BaseStateGroup, GroupEventType, Text, VkSimpleApi
+from vkbottle import GroupEventType, Text, api
 
-from keyboard import keyboard_init, keyboard_option
-from config import token, GROUP_token
-from main import VKinderCandidate, SuperState
+from keyboard import keyboard_init
+from config import group_token, token
+from main import SuperState, VKinderCandidate
 
 bot = Bot(token)
-api = VkSimpleApi(GROUP_token)
 candidate = VKinderCandidate(api, bot)
-keyboard_init(keyboard_option)
+keyboard = keyboard_init
 
 @bot.on.raw_event(GroupEventType.GROUP_JOIN, dataclass=GroupEventType.GROUP_JOIN)
 async def group_join_hadnler(event: GroupEventType.GROUP_JOIN):

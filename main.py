@@ -1,22 +1,22 @@
 import logging
 from vkbottle import API, Bot, EMPTY_KEYBOARD, Keyboard, BaseStateGroup
 from vkbottle.bot import Message, Bot
-from config import API, GROUP_TOKEN, labeler
+from config import API, group_token, token
 from keyboard import keyboard_init
 
-api = API(GROUP_TOKEN)
+api = API(group_token)
 bot = Bot(api=api)
 
 logging.basicConfig(level=logging.INFO)
 
 class SuperState(BaseStateGroup):
-    GENDER = 1
-    STATUS = 2
-    ID = 3
-    CITY = 4
-    AGE = 5
-    END = 6
-    TYPE = 7
+    GENDER = "gender"
+    STATUS = "status"
+    ID = "id"
+    CITY = "city"
+    AGE = "age"
+    END = "end"
+    TYPE = "type"
 
 keyboard_option = {'start_keyboard': Keyboard(one_time=True, inline=False),
                     'status_opt_man': Keyboard(one_time=True, inline=False),
@@ -56,7 +56,7 @@ class VKinderCandidate():
                 await message.answer(attachment=f"photo{profile['id']}_{p_id}")
 
         self.search_parameter.clear()
-        await message.answer('Это все кого я нашёл, чем займёмся теперь?',
+        await message.answer('Это все кого я нашёл',
                              keyboard=keyboard_option['end_keyboard']
                              )
         await self.bot.state_dispenser.set(message.peer_id, SuperState.END)
@@ -78,7 +78,7 @@ class VKinderCandidate():
     async def welcome(self, message):
         await message.answer(("Привет, я бот способный подбирать собеседников по интересам"
                             "Например: для тебя, для друга/подруги по вашим параметрам"
-                            "Начнем ")),
+                            "Начнем? ")),
         random_id = 0,
         keyboard = keyboard_option['start_keyboard'].get_json()
         await self.bot.state_dispenser.set(message.peer_id, SuperState.TYPE)
@@ -137,6 +137,4 @@ class VKinderCandidate():
         await self.bot.state_dispenser.set(message.peer_id, SuperState.ID)
     
     
-if __name__== "__main__":
-    token = ''
-    group_token = ''
+    bot.run_forever()

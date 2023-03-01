@@ -2,6 +2,6 @@ import os
 from vkbottle import API, BuiltinStateDispenser
 
 token = ''
-group_token = 'vk1.a.cXIls7TD2epq3AZ8CHiGKQB5DCwORcBmd8OIA2kSegu2RX4CNvFntkguxBnr3CdCA7Xym2pKKEblv8t8vi8ATxTQzoXvf4905YnnWnC9-Rzjm1PESBeZrquNo8ON00TobiQ7OI6iiO7SbayIePDJ6JclMirFyFif2xU1x8q6vq__j2MrzRYVjcJkrZYq3_Fg0Zc5XaR_vJm_s0vsoevdpg_'
+group_token = ''
 api = API("group_token")
 state_dispenser = BuiltinStateDispenser()
